@@ -36,3 +36,11 @@ Source Systems
 - Defined the high-level architecture
 - Created GitHub repository
 - Set up Git-based project structure
+
+### Day 2
+
+- Designed the insurance source data model
+- Defined primary and foreign key relationships
+- Created Azure Storage Account
+- Enabled ADLS Gen2 hierarchical namespace
+- Created the insurance data lake container
