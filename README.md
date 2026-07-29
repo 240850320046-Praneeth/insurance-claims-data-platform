@@ -44,3 +44,23 @@ Source Systems
 - Created Azure Storage Account
 - Enabled ADLS Gen2 hierarchical namespace
 - Created the insurance data lake container
+
+
+### Day 3
+
+- Created synthetic insurance source datasets
+- Generated customers, policies, hospitals, claims, and payments data
+- Added intentional data-quality issues for pipeline testing
+- Created the Bronze layer structure in ADLS Gen2
+- Uploaded raw source datasets to Bronze
+
+### Day 4
+
+- Created Azure Data Factory
+- Configured ADLS Gen2 Linked Service
+- Used Managed Identity for storage connectivity
+- Created source and sink datasets
+- Built ADF Copy pipelines
+- Ingested Customers and Hospitals from Landing to Bronze
+- Validated pipeline execution and copy metrics
+- Tested pipeline rerun behaviour

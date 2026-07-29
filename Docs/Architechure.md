@@ -8,11 +8,14 @@ The platform will ingest this data into Azure, preserve the raw data, clean and 
 
 ## High-Level Architecture
 
-Source Systems
-      |
-      v
+Synthetic Python Generator
+          ↓
+Local CSV
+          ↓
+ADLS Landing
+          ↓
 Azure Data Factory
-      |
+      
       v
 ADLS Gen2 - Bronze
       |
