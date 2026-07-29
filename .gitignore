@@ -23,3 +23,7 @@ Thumbs.db
 
 # Temporary files
 *.tmp
+
+
+# Generated source datasets
+data/source/
