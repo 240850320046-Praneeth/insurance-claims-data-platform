@@ -1,0 +1,15 @@
+{
+	"name": "inscuranceadfpraneeth",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastasia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "9989333c-ce7a-4b09-8b74-fa0a250be23f",
+		"tenantId": "31a95d4f-ade5-4bb9-8126-15e974500136"
+	}
+}
