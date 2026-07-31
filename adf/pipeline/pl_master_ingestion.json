@@ -1,0 +1,64 @@
+{
+	"name": "pl_master_ingestion",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach Dataset",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.ingestion_metadata",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Execute Generic Ingestion",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "pl_ingest_file",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"directory_name": {
+										"value": "@item().directory_name",
+										"type": "Expression"
+									},
+									"file_name": {
+										"value": "@item().file_name",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"ingestion_metadata": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"directory_name": "customers",
+						"file_name": "customers.csv"
+					},
+					{
+						"directory_name": "hospitals",
+						"file_name": "hospitals.csv"
+					}
+				]
+			}
+		},
+		"annotations": []
+	}
+}
