@@ -131,6 +131,48 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_ingestion_metadata')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_adls_insurance",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ingestion_metadata.csv",
+						"folderPath": "Config",
+						"fileSystem": "insurance"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "directory_name",
+						"type": "String"
+					},
+					{
+						"name": "file_name",
+						"type": "String"
+					},
+					{
+						"name": "is_active",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_adls_insurance')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_landing_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -565,66 +607,105 @@
 					{
 						"name": "ForEach Dataset",
 						"type": "ForEach",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Lookup Ingestion Metadata",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@pipeline().parameters.ingestion_metadata",
+								"value": "@activity('Lookup Ingestion Metadata').output.value",
 								"type": "Expression"
 							},
 							"isSequential": false,
 							"activities": [
 								{
-									"name": "Execute Generic Ingestion",
-									"type": "ExecutePipeline",
+									"name": "If Condition1",
+									"type": "IfCondition",
 									"dependsOn": [],
-									"policy": {
-										"secureInput": false
-									},
 									"userProperties": [],
 									"typeProperties": {
-										"pipeline": {
-											"referenceName": "pl_ingest_file",
-											"type": "PipelineReference"
+										"expression": {
+											"value": "@equals(toLower(string(item().is_active)),'true')",
+											"type": "Expression"
 										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"directory_name": {
-												"value": "@item().directory_name",
-												"type": "Expression"
-											},
-											"file_name": {
-												"value": "@item().file_name",
-												"type": "Expression"
+										"ifTrueActivities": [
+											{
+												"name": "Execute Generic Ingestion",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"policy": {
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "pl_ingest_file",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"directory_name": {
+															"value": "@item().directory_name",
+															"type": "Expression"
+														},
+														"file_name": {
+															"value": "@item().file_name",
+															"type": "Expression"
+														}
+													}
+												}
 											}
-										}
+										]
 									}
 								}
 							]
+						}
+					},
+					{
+						"name": "Lookup Ingestion Metadata",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "ds_ingestion_metadata",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
 						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"parameters": {
-					"ingestion_metadata": {
-						"type": "array",
-						"defaultValue": [
-							{
-								"directory_name": "customers",
-								"file_name": "customers.csv"
-							},
-							{
-								"directory_name": "hospitals",
-								"file_name": "hospitals.csv"
-							}
-						]
-					}
-				},
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_ingestion_metadata')]",
 				"[concat(variables('factoryId'), '/pipelines/pl_ingest_file')]"
 			]
 		}
