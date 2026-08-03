@@ -1,0 +1,37 @@
+{
+	"name": "ds_ingestion_metadata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_insurance",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "ingestion_metadata.csv",
+				"folderPath": "Config",
+				"fileSystem": "insurance"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "directory_name",
+				"type": "String"
+			},
+			{
+				"name": "file_name",
+				"type": "String"
+			},
+			{
+				"name": "is_active",
+				"type": "String"
+			}
+		]
+	}
+}
