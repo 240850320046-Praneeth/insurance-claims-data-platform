@@ -1,0 +1,5 @@
+dataset,column_name,rule
+customers,email,NOT_NULL
+customers,email,VALID_EMAIL
+customers,gender,VALID_GENDER
+customers,date_of_birth,VALID_DOB
