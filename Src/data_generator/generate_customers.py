@@ -3,7 +3,7 @@
 import csv
 import os
 import random
-from datetime import date, timedelta
+from datetime import datetime, timedelta, date
 
 from config import (
     CUSTOMER_COUNT,
@@ -43,11 +43,18 @@ cities = [
 ]
 
 
-# 4. HELPER FUNCTION
+# 4. HELPER FUNCTIONS
 
 def random_date(start_date, end_date):
     days = (end_date - start_date).days
     return start_date + timedelta(days=random.randint(0, days))
+
+
+def random_datetime(start_datetime, end_datetime):
+    seconds = int((end_datetime - start_datetime).total_seconds())
+    return start_datetime + timedelta(
+        seconds=random.randint(0, seconds)
+    )
 
 
 # 5. OUTPUT FILE LOCATION
@@ -64,7 +71,7 @@ with open(output_path, "w", newline="", encoding="utf-8") as file:
 
     writer = csv.writer(file)
 
-    # CSV header
+    # CSV Header
     writer.writerow([
         "customer_id",
         "first_name",
@@ -74,7 +81,8 @@ with open(output_path, "w", newline="", encoding="utf-8") as file:
         "email",
         "phone",
         "city",
-        "created_at"
+        "created_at",
+        "modified_at"
     ])
 
     # Generate customers one at a time
@@ -101,10 +109,14 @@ with open(output_path, "w", newline="", encoding="utf-8") as file:
 
         city = random.choice(cities)
 
-        created_at = random_date(
-            date(2024, 1, 1),
-            date(2026, 7, 1)
+        # Generate Created Timestamp
+        created_at = random_datetime(
+            datetime(2024, 1, 1, 0, 0, 0),
+            datetime(2026, 7, 1, 23, 59, 59)
         )
+
+        # Modified Timestamp is same initially
+        modified_at = created_at
 
         # 7. INTENTIONAL DATA QUALITY PROBLEMS
 
@@ -122,7 +134,6 @@ with open(output_path, "w", newline="", encoding="utf-8") as file:
         elif error_roll < 0.019:
             gender = "UNKNOWN"
 
-
         # 8. WRITE CUSTOMER TO CSV
 
         writer.writerow([
@@ -134,7 +145,8 @@ with open(output_path, "w", newline="", encoding="utf-8") as file:
             email,
             phone,
             city,
-            created_at
+            created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            modified_at.strftime("%Y-%m-%d %H:%M:%S")
         ])
 
 
