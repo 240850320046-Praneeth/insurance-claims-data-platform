@@ -1,0 +1,23 @@
+{
+	"name": "ds_quarantine_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_insurance",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "quarintine/customers",
+				"fileSystem": "insurance"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
