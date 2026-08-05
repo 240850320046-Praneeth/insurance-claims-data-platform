@@ -1,0 +1,33 @@
+{
+	"name": "ds_watermark",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_insurance",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "watermark.csv",
+				"folderPath": "Config",
+				"fileSystem": "insurance"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "dataset",
+				"type": "String"
+			},
+			{
+				"name": "last_processed_time",
+				"type": "String"
+			}
+		]
+	}
+}
