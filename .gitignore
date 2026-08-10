@@ -27,3 +27,18 @@ Thumbs.db
 
 # Generated source datasets
 data/source/
+
+
+# Generated data
+data/bronze/
+data/silver/
+data/quarantine/
+
+# Python
+__pycache__/
+*.pyc
+
+# Spark
+.sparkStaging/
+metastore_db/
+derby.log
